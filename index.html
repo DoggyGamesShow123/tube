@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Embed Loader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f2f2f2;
+        }
+
+        #inputBox {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #loadBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Responsive 16:9 container */
+        .video-container {
+            position: relative;
+            width: 60%;
+            max-width: 900px;
+            margin-top: 25px;
+            padding-bottom: 56.25%; /* 16/9 */
+            height: 0;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>YouTube 16:9 Embed Loader</h2>
+
+    <input type="text" id="inputBox" placeholder="Paste YouTube link here...">
+    <button id="loadBtn" onclick="loadVideo()">Load Video</button>
+
+    <div class="video-container">
+        <iframe id="videoFrame"
+            src="https://www.youtube-nocookie.com/embed/Zy4oPoCDU4I"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <script>
+        function extractYouTubeID(url) {
+            /*
+               Works for:
+               - https://www.youtube.com/watch?v=ID
+               - https://youtu.be/ID
+               - https://www.youtube.com/embed/ID
+               - with extra params (?t=30s etc.)
+            */
+            let regex = /(?:v=|\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+            let match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        function loadVideo() {
+            let url = document.getElementById("inputBox").value.trim();
+            let id = extractYouTubeID(url);
+
+            if (!id) {
+                alert("Invalid YouTube link.");
+                return;
+            }
+
